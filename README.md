@@ -4,28 +4,25 @@
 
 > Uma janela aleatória para o mundo: imagens do **Wikimedia Commons** trocando sozinhas, com modos de atmosfera — calmo, animado, histórico, **anemoia**, campos infinitos, lugares que já foram movimentados e hoje estão vazios, abandonados… ou o seu próprio tema.
 
-## 🎛️ Modos (19, organizados por menu)
+## 🎛️ Modos (29, no menu organizado por categoria)
 
-**🎲 Sorte**
-| 🎲 Aleatório | sorteio puro entre milhões de fotos do Commons |
+**🎲 Sorte** — Aleatório (sorteio puro entre milhões)
 
-**🌫️ Atmosferas**
-| 🧘 Calmo | 🎉 Animado | 🌧️ Melancólico | ⚡ Épico | — cada um com ~10 buscas literais ao clima |
+**🌫️ Atmosferas** — 🧘 Calmo · 🎉 Animado · 🌧️ Melancólico · ⚡ Épico · ⛈️ Tempestades
 
-**⏳ Tempo**
-| 🏛️ **Histórico** — coisas históricas de verdade: guerras, ruínas, castelos, pirâmides, monumentos, pinturas |
-| 🎞️ **Anemoia** — lugares vazios que guardam a memória de quem um dia os encheu |
-| 📅 **Ano** — digite 1826–2025 e viaje |
+**⏳ Tempo** — 🏛️ Histórico (guerras, ruínas, castelos, pirâmides, pinturas) · 🎞️ Anemoia (lugares vazios que parecem ter sido cheios um dia) · 📅 Ano (1826–2025)
 
-**🌍 Natureza**
-| 🌾 Campos infinitos | 🌋 Vulcões | ❄️ Neve e gelo | 🏜️ Deserto | 🌊 Oceano e tempestades | 🌌 Céu noturno |
+**🌍 Natureza** — 🌾 Campos infinitos · 🌲 Florestas · 🏞️ Rios e cachoeiras · 🌋 Vulcões · ❄️ Neve e gelo · 🏜️ Deserto · 🌊 Oceano e tempestades · 🚜 Agricultura
 
-**🏙️ Lugares**
-| 🚉 Ecos de movimento (cheios ontem, vazios hoje) | 🏚️ Abandonados | 🌃 Cidades à noite |
+**🌌 Céu e espaço** — 🌌 Céu noturno · 🚀 Espaço (Saturno, nebulosas, foguetes, Apollo, Marte)
 
-**❤️ Você**
-| ❤️ **Parecidos** — usa as categorias das suas favoritas no Commons para achar imagens relacionadas |
-| ✏️ **Meu tema** — qualquer tema, lugar, época ou atmosfera |
+**🛤️ Caminhos** — 🛤️ Estradas e trilhos · 🚂 Trens antigos · 🌉 Pontes · 🗼 Faróis e costa
+
+**🏙️ Lugares** — 🌃 Cidades à noite · 🚉 Ecos de movimento · 🏚️ Abandonados · ⛪ Catedrais
+
+**❤️ Você** — ❤️ Parecidos (usa as categorias das suas favoritas no Commons) · ✏️ Meu tema
+
+Cada modo tem **10+ buscas literais** ao tema, agregadas — se uma vier fraca, as outras sustentam.
 
 ## ✨ Detalhes
 
