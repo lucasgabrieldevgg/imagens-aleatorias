@@ -166,7 +166,7 @@
 
 <div id="banner"></div>
 <div id="loading" hidden><div class="spin"></div><div class="lt">buscando imagens…</div></div>
-<div id="ribbon">🎞️ anemoia — nostalgia de um tempo que você não viveu</div>
+<div id="ribbon">🎞️ anemoia — lugares vazios que guardam a memória de quem um dia os encheu</div>
 
 <div id="cap" hidden>
   <div class="t" id="cap-t">—</div>
@@ -282,10 +282,11 @@ const POOLS={
   abandonados:['abandoned building urbex','ghost town street','abandoned factory interior','derelict mansion','abandoned hospital corridor','abandoned room decay','ruins interior'],
 };
 /* termo mais amplo por modo, para nunca encerrar um lote com zero */
+POOLS.anemoia=['abandoned ballroom','empty ornate theatre','abandoned dance hall','grand empty hall interior','abandoned hotel lobby','empty old cafe interior','abandoned palace interior','abandoned cinema auditorium','faded grandeur interior','empty grand station concourse','vacant hall chandelier','abandoned casino interior'];
 const FALLBACK={
   calmo:'calm landscape', animado:'festival', historico:'historical photograph',
   campos:'grassland landscape', vazios:'empty interior', abandonados:'abandoned building',
-  anemoia:'black and white photograph', custom:'photograph'
+  anemoia:'abandoned interior', custom:'photograph'
 };
 const BLOQ=/(map|mapa|diagram|logo|chart|graph|flag|coat[- ]of[- ]arms|seal|signature|poster|cover|screenshot|stamp|selo|bra[sz]ão)/i;
 
@@ -368,13 +369,6 @@ async function novoLote(){
     case 'aleatorio':
       cand=await loteAleatorio(2);
       break;
-    case 'anemoia':{
-      const ini=1890+10*Math.floor(Math.random()*10), dec=`${ini}s`;
-      S._dec=dec;
-      cand=merge(await busca(`incategory:"${dec} photographs"`),
-                 await busca(`"${dec}" black and white photograph`));
-      break;
-    }
     case 'ano':
       cand=merge(await busca(`${S.ano} photograph`),
                  await busca(`incategory:"${S.ano} photographs"`));
