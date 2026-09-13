@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0e14">
+<title>Imagens Aleatórias — uma janela para o mundo</title>
+<style>
+  :root{
+    --bg:#0b0e14; --ink:#eef1f7; --muted:#9aa5b5;
+    --glass:rgba(13,17,26,.72); --line:rgba(255,255,255,.09);
+    --brand:#7c8cff; --heart:#ff5d73; --ok:#3fb950;
+    --shadow:0 10px 40px rgba(0,0,0,.55);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);overflow:hidden;
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;user-select:none}
+  button{font:inherit;cursor:pointer;color:inherit;background:none;border:0}
+  button:focus-visible,input:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(124,140,255,.35)}
+  svg{flex-shrink:0}
+
+  /* ─── imagens ─── */
+  #bg,#pic{position:fixed;inset:0;width:100vw;height:100vh}
+  #bg{object-fit:cover;filter:blur(46px) brightness(.38) saturate(1.15);transform:scale(1.12);
+    transition:opacity .6s ease}
+  #pic{object-fit:contain;padding:0;opacity:0;transition:opacity .55s ease;z-index:1}
+  #pic.on{opacity:1}
+
+  /* ─── topbar ─── */
+  header{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:10px;
+    padding:10px 14px;background:linear-gradient(rgba(5,8,14,.75),transparent);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .brand{font-weight:800;font-size:14.5px;letter-spacing:-.01em;white-space:nowrap;
+    display:flex;align-items:center;gap:7px}
+  .brand small{color:var(--muted);font-weight:500}
+  @media (max-width:640px){ .brand small{display:none} }
+  .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;padding:2px;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 12px,#000 calc(100% - 12px),transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 12px,#000 calc(100% - 12px),transparent)}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex-shrink:0;border:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(10px);
+    backdrop-filter:blur(10px);border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600;
+    color:var(--muted);transition:.15s;white-space:nowrap}
+  .chip:hover{color:var(--ink);border-color:rgba(255,255,255,.22)}
+  .chip.active{background:var(--brand);border-color:var(--brand);color:#fff;
+    box-shadow:0 3px 14px rgba(124,140,255,.45)}
+  .hbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--glass);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    display:inline-flex;align-items:center;justify-content:center;transition:.15s;position:relative}
+  .hbtn:hover{border-color:rgba(255,255,255,.25);transform:translateY(-1px)}
+  .cnt{position:absolute;top:-6px;right:-6px;background:var(--heart);color:#fff;font-size:10px;font-weight:800;
+    min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+  @media (max-width:640px){ header{flex-wrap:wrap} .chips{order:3;flex-basis:100%} }
+
+  /* ─── ribbon anemoia ─── */
+  #ribbon{position:fixed;left:50%;transform:translateX(-50%);bottom:172px;z-index:10;
+    background:rgba(124,92,252,.16);border:1px solid rgba(124,92,252,.4);color:#c9c0ff;
+    font-size:12px;font-weight:600;border-radius:999px;padding:6px 14px;display:none;
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  #ribbon.on{display:block;animation:up .3s ease}
+
+  /* ─── legenda ─── */
+  #cap{position:fixed;left:50%;transform:translateX(-50%);bottom:86px;z-index:10;width:min(680px,calc(100vw - 20px));
+    background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:14px;padding:12px 16px;box-shadow:var(--shadow);
+    opacity:0;transition:opacity .5s ease}
+  #cap.on{opacity:1}
+  #cap .t{font-weight:700;font-size:14.5px;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap}
+  #cap .m{font-size:12.5px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #cap .m a{color:var(--brand);text-decoration:none;font-weight:600}
+  #cap .m a:hover{text-decoration:underline}
+
+  /* ─── controles ─── */
+  #ctrl{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:12;display:flex;gap:8px}
+  .cbt{width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--glass);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    display:inline-flex;align-items:center;justify-content:center;transition:.15s;box-shadow:var(--shadow)}
+  .cbt:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.28)}
+  .cbt:active{transform:translateY(0)}
+  .cbt.heart.on{color:var(--heart)}
+  .cbt.heart.on svg{fill:var(--heart)}
+  .cbt svg{pointer-events:none}
+  @media (max-width:420px){ .cbt{width:42px;height:42px;border-radius:12px} #cap{bottom:78px} }
+
+  /* ─── splash ─── */
+  #splash{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:16px;transition:opacity .5s ease}
+  #splash.off{opacity:0;pointer-events:none}
+  #splash .logo{font-size:34px}
+  #splash .t{font-weight:800;font-size:19px;letter-spacing:-.02em}
+  #splash .s{color:var(--muted);font-size:13.5px}
+  .spin{width:34px;height:34px;border-radius:99px;border:3px solid rgba(255,255,255,.12);
+    border-top-color:var(--brand);animation:rot 1s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  @keyframes up{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translate(-50%,0)}}
+
+  /* ─── modais ─── */
+  .modal{position:fixed;inset:0;background:rgba(2,4,10,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;padding:16px;z-index:50;animation:fade .15s ease}
+  .modal[hidden]{display:none}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .sheet{background:#11151f;border:1px solid var(--line);border-radius:18px;max-width:560px;width:100%;
+    max-height:85vh;overflow:auto;padding:20px;box-shadow:var(--shadow);animation:pop .18s ease}
+  @keyframes pop{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+  .sheet h2{margin:0 0 4px;font-size:17px}
+  .sheet .hint{margin:0 0 14px;color:var(--muted);font-size:13px}
+  .sheet label{display:block;font-size:12.5px;font-weight:700;margin:12px 0 5px;color:var(--muted)}
+  .sheet input[type=text],.sheet input[type=number],.sheet select{width:100%;border:1px solid var(--line);
+    border-radius:10px;padding:10px;font:inherit;background:#0b0e16;color:var(--ink)}
+  .sheet .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:7px;border-radius:10px;padding:9px 16px;font-weight:600;
+    font-size:14px;border:1px solid var(--line);background:#171c28;transition:.15s}
+  .btn:hover{border-color:rgba(255,255,255,.25)}
+  .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+
+  /* favoritos */
+  #favgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+  .fcard{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0b0e16;position:relative}
+  .fcard img{width:100%;height:92px;object-fit:cover;display:block}
+  .fcard .ft{font-size:11px;color:var(--muted);padding:7px 8px 9px;overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap;display:block}
+  .fcard .fx{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:8px;
+    background:rgba(5,8,14,.7);display:flex;align-items:center;justify-content:center}
+  .fcard .fx:hover{color:var(--heart)}
+
+  #toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(8px);
+    background:#181f2e;color:#fff;padding:10px 18px;border-radius:999px;font-size:13.5px;font-weight:500;
+    z-index:99;opacity:0;transition:.25s;pointer-events:none;box-shadow:var(--shadow);border:1px solid var(--line)}
+  #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  #banner{position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:30;background:#3d1212;
+    border:1px solid #7f1d1d;color:#fecaca;font-size:13px;padding:9px 16px;border-radius:12px;
+    display:none;max-width:90vw;text-align:center}
+  #banner.on{display:block;animation:fade .2s ease}
+
+  @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+</style>
+</head>
+<body>
+
+<img id="bg" alt="" aria-hidden="true">
+<img id="pic" alt="imagem aleatória do Wikimedia Commons" referrerpolicy="no-referrer">
+
+<header>
+  <div class="brand">🖼 <span>Imagens Aleatórias</span> <small>· via Wikimedia Commons</small></div>
+  <div class="chips" id="chips"></div>
+  <button id="btn-favs" class="hbtn" title="Meus favoritos" aria-label="Favoritos">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    <span id="favcnt" class="cnt" hidden>0</span>
+  </button>
+  <button id="btn-config" class="hbtn" title="Configurações" aria-label="Configurações">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </button>
+</header>
+
+<div id="banner"></div>
+<div id="ribbon">🎞️ anemoia — nostalgia de um tempo que você não viveu</div>
+
+<div id="cap" hidden>
+  <div class="t" id="cap-t">—</div>
+  <div class="m" id="cap-m"></div>
+</div>
+
+<div id="ctrl">
+  <button id="c-prev" class="cbt" title="Guardar essa pra depois? proxima [→]" aria-label="Próxima">⏭</button>
+  <button id="c-play" class="cbt" title="Pausar/retomar passagem automática [P]" aria-label="Pausar">
+    <svg id="ic-pause" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1.2"/><rect x="14" y="4" width="4" height="16" rx="1.2"/></svg>
+    <svg id="ic-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M8 5.14v13.72c0 .8.87 1.3 1.56.88l11-6.86a1.04 1.04 0 0 0 0-1.76l-11-6.86A1.04 1.04 0 0 0 8 5.14z"/></svg>
+  </button>
+  <button id="c-heart" class="cbt heart" title="Favoritar [L]" aria-label="Favoritar">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+  </button>
+  <button id="c-link" class="cbt" title="Copiar link da página original" aria-label="Copiar link">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+  </button>
+  <button id="c-full" class="cbt" title="Tela cheia [F]" aria-label="Tela cheia">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+  </button>
+</div>
+
+<div id="splash">
+  <div class="logo">🖼️</div>
+  <div class="t">Imagens Aleatórias</div>
+  <div class="s">buscando uma janela para o mundo no Wikimedia Commons…</div>
+  <div class="spin"></div>
+</div>
+
+<!-- modal: entrada (ano / tema) -->
+<div id="m-in" class="modal" hidden>
+  <div class="sheet">
+    <h2 id="in-t">Modo</h2>
+    <p class="hint" id="in-h"></p>
+    <div id="in-y" hidden>
+      <label>Ano (1826 a 2025)</label>
+      <input type="number" id="in-year" min="1826" max="2025" value="1942">
+    </div>
+    <div id="in-tx" hidden>
+      <label>Tema, lugar, época ou atmosfera</label>
+      <input type="text" id="in-term" placeholder="ex.: paris 1900, vulcões, faróis na neblina…">
+    </div>
+    <div class="row">
+      <button id="in-cancel" class="btn">Cancelar</button>
+      <button id="in-go" class="btn primary">Mostrar imagens</button>
+    </div>
+  </div>
+</div>
+
+<!-- modal: favoritos -->
+<div id="m-favs" class="modal" hidden>
+  <div class="sheet">
+    <h2>❤️ Meus favoritos</h2>
+    <p class="hint">Salvos neste navegador. Clique na imagem para abrir a página original no Commons.</p>
+    <div id="favgrid"></div>
+    <div class="row"><button id="favs-close" class="btn">Fechar</button></div>
+  </div>
+</div>
+
+<!-- modal: configurações -->
+<div id="m-config" class="modal" hidden>
+  <div class="sheet">
+    <h2>⚙️ Configurações</h2>
+    <p class="hint">Imagens: <b>Wikimedia Commons</b> (milhões de fotos livres). Cada imagem exibe autor e licença — respeitando os termos de uso.</p>
+    <label>Passagem automática</label>
+    <select id="cfg-timer">
+      <option value="10">a cada 10 segundos</option>
+      <option value="15" selected>a cada 15 segundos</option>
+      <option value="30">a cada 30 segundos</option>
+      <option value="60">a cada 1 minuto</option>
+      <option value="0">desligada (só manual)</option>
+    </select>
+    <label>Atalhos do teclado</label>
+    <div class="hint" style="margin:0">→ / espaço = próxima · P = pausar · F = tela cheia · L = favoritar</div>
+    <div class="row"><button id="cfg-close" class="btn primary">Fechar</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* ═══════════════════════════════════════════════════════════════
+   IMAGENS ALEATÓRIAS — fonte: Wikimedia Commons (grátis, sem chave).
+   Regras de convivência com a API: filtro por mime jpeg/png,
+   miniaturas de 1600px (nunca o original gigante), retry com pausa
+   no 429 e troca automática de query quando um tema tem pouco material.
+   ═══════════════════════════════════════════════════════════════ */
+const WIKI='https://commons.wikimedia.org/w/api.php';
+const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},
+             set(k,v){try{localStorage.setItem(k,v);}catch(e){}},
+             getJ(k){try{return JSON.parse(this.get(k)||'[]');}catch(e){return [];}}};
+
+const MODES=[
+  {id:'aleatorio',  ic:'🎲', nome:'Aleatório'},
+  {id:'calmo',      ic:'🧘', nome:'Calmo'},
+  {id:'animado',    ic:'🎉', nome:'Animado'},
+  {id:'historico',  ic:'🏛️', nome:'Histórico'},
+  {id:'anemoia',    ic:'🎞️', nome:'Anemoia'},
+  {id:'ano',        ic:'📅', nome:'Ano…'},
+  {id:'campos',     ic:'🌾', nome:'Campos infinitos'},
+  {id:'vazios',     ic:'🚉', nome:'Ecos de movimento'},
+  {id:'abandonados',ic:'🏚️', nome:'Abandonados'},
+  {id:'custom',     ic:'✏️', nome:'Meu tema'},
+];
+const POOLS={
+  calmo:['misty lake','calm sea horizon','foggy forest morning','peaceful landscape','tranquil mountain lake','sunrise field mist','quiet river dusk'],
+  animado:['carnival crowd','fireworks night sky','street festival people','concert stage lights','parade celebration colors','night market street'],
+  historico:['vintage photograph street','historical photograph city','black and white photograph people','old archive photograph landmark','historical building photograph'],
+  campos:['grassland horizon','prairie landscape','vast open field','open plain sky','steppe landscape','savanna horizon','endless field sunset'],
+  vazios:['empty railway station','abandoned theatre interior','empty stadium seats','deserted street city','empty swimming pool','abandoned railway platform','empty hall architecture'],
+  abandonados:['abandoned building urbex','ghost town street','abandoned factory interior','derelict mansion','abandoned hospital corridor','abandoned room decay'],
+};
+const BLOQ=/(map|mapa|diagram|logo|chart|graph|flag|coat[- ]of[- ]arms|seal|signature|poster|cover|screenshot|stamp|selo|bra[sz]ão)/i;
+
+/* ============ estado ============ */
+const S={ mode:'aleatorio', termo:'', ano:1942, queue:[], qi:0, cur:null,
+          auto:true, timer:15, tId:null, depth:0, carregando:false, favs:store.getJ('ia_favoritos') };
+const $=s=>document.querySelector(s);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
+function banner(m){const b=$('#banner');if(!m){b.classList.remove('on');return;}b.textContent=m;b.classList.add('on');setTimeout(()=>b.classList.remove('on'),4500);}
+
+/* ============ API Wikimedia ============ */
+async function wm(params){
+  const u=new URL(WIKI);
+  params.format='json'; params.formatversion='2'; params.origin='*';
+  for(const[k,v]of Object.entries(params)) u.searchParams.set(k,v);
+  for(let tent=0;tent<2;tent++){
+    const r=await fetch(u);
+    if(r.status===429){ await sleep(4000*(tent+1)); continue; }
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(d.error) throw new Error(d.error.info||'erro da API');
+    return d;
+  }
+  throw new Error('Wikimedia sobrecarregada — tenta de novo em instantes');
+}
+function limparHTML(s){ return (s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim(); }
+function filtrar(d){
+  const pages=(d.query&&d.query.pages)||[];
+  const out=[];
+  for(const p of pages){
+    const ii=p.imageinfo&&p.imageinfo[0]; if(!ii) continue;
+    if(ii.mime!=='image/jpeg'&&ii.mime!=='image/png') continue;
+    if((ii.width||0)<700||!ii.thumburl) continue;
+    if(BLOQ.test(p.title)) continue;
+    const md=ii.extmetadata||{};
+    const ano=(limparHTML(md.DateTimeOriginal&&md.DateTimeOriginal.value).match(/\d{4}/)||[])[0]||'';
+    out.push({ id:p.pageid, thumb:ii.thumburl, page:ii.descriptionurl,
+      title:p.title.replace(/^File:/,'').replace(/\.(jpe?g|png)$/i,''),
+      artist:limparHTML(md.Artist&&md.Artist.value).slice(0,60)||'autor desconhecido',
+      lic:(md.LicenseShortName&&limparHTML(md.LicenseShortName.value))||'Commons',
+      ano, w:ii.width, h:ii.height });
+  }
+  return out.filter(c=>!S.seen||!S.seen.has(c.id));
+}
+async function busca(q){
+  const d=await wm({action:'query',generator:'search',gsrsearch:q+' filetype:bitmap',
+    gsrnamespace:'6',gsrlimit:'30',prop:'imageinfo',
+    iiprop:'url|size|mime|extmetadata',iiurlwidth:'1600'});
+  return filtrar(d);
+}
+const escolhe=a=>a[Math.floor(Math.random()*a.length)];
+
+async function novoLote(tent=0){
+  let cand=[];
+  switch(S.mode){
+    case 'aleatorio':{
+      const d=await wm({action:'query',generator:'random',grnnamespace:'6',grnlimit:'20',
+        prop:'imageinfo',iiprop:'url|size|mime|extmetadata',iiurlwidth:'1600'});
+      cand=filtrar(d);
+      break;
+    }
+    case 'anemoia':{
+      const ini=1890+10*Math.floor(Math.random()*10);      /* décadas de 1890 a 1970 */
+      const dec=`${ini}s`;
+      const q=(tent%2===0)?`incategory:"${dec} photographs"`:`"${dec}" black and white photograph`;
+      cand=filtrar(await busca(q));
+      if(cand.length<4&&tent<2) return novoLote(tent+1);
+      S._dec=dec;
+      break;
+    }
+    case 'ano':{
+      cand=filtrar(await busca(`${S.ano} photograph`));
+      if(cand.length<4&&tent<2) return novoLote(tent+1);
+      break;
+    }
+    case 'custom':{
+      cand=filtrar(await busca(S.termo));
+      if(cand.length<4&&tent<1){ S.termo2=true; }
+      break;
+    }
+    default:{
+      const pool=POOLS[S.mode]||['photograph'];
+      cand=filtrar(await busca(escolhe(pool)));
+      if(cand.length<4&&tent<2) return novoLote(tent+1);
+    }
+  }
+  if(!S.seen) S.seen=new Set();
+  cand.forEach(c=>S.seen.add(c.id));
+  /* embaralha */
+  for(let i=cand.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [cand[i],cand[j]]=[cand[j],cand[i]]; }
+  if(S.seen.size>400) S.seen.clear();
+  return cand;
+}
+
+/* ============ exibição ============ */
+function renderChips(){
+  $('#chips').innerHTML=MODES.map(m=>
+    `<button class="chip${m.id===S.mode?' active':''}" data-m="${m.id}">${m.ic} ${m.nome}</button>`).join('');
+  document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>selecionar(b.dataset.m));
+}
+function selecionar(m){
+  S.mode=m; renderChips();
+  const mm=MODES.find(x=>x.id===m);
+  $('#ribbon').classList.toggle('on', m==='anemoia');
+  if(m==='ano'){ pedirAno(); return; }
+  if(m==='custom'){ pedirTema(); return; }
+  recomecar();
+}
+function pedirAno(){
+  $('#in-t').textContent='📅 Um ano específico';
+  $('#in-h').textContent='Imagens registradas naquele ano — uma viagem no tempo.';
+  $('#in-y').hidden=false; $('#in-tx').hidden=true; $('#m-in').hidden=false;
+  setTimeout(()=>$('#in-year').focus(),50);
+}
+function pedirTema(){
+  $('#in-t').textContent='✏️ Meu tema';
+  $('#in-h').textContent='Digite qualquer tema, lugar, época ou atmosfera (em português ou inglês — o Commons indexa melhor em inglês).';
+  $('#in-tx').hidden=false; $('#in-y').hidden=true; $('#m-in').hidden=false;
+  setTimeout(()=>$('#in-term').focus(),50);
+}
+function recomecar(){ S.queue=[]; S.qi=0; proxima(); }
+
+async function proxima(pularAnim){
+  if(S.carregando) return;
+  if(S.qi>=S.queue.length){ await carregarLote(); if(!S.queue.length) return; }
+  const c=S.queue[S.qi++];
+  mostrar(c);
+  programar();
+}
+async function carregarLote(){
+  S.carregando=true;
+  try{
+    S.queue=await novoLote(); S.qi=0;
+    if(!S.queue.length) banner('Nada encontrado para esse tema — tenta outro termo ou modo 🙂');
+  }catch(e){ banner('⚠️ '+e.message); }
+  finally{ S.carregando=false; $('#splash').classList.add('off'); }
+}
+function mostrar(c){
+  S.cur=c; S.depth++;
+  const im=new Image();
+  im.onload=()=>{
+    S.depth=0;
+    $('#bg').src=c.thumb; $('#pic').src=c.thumb; $('#pic').classList.add('on');
+    $('#cap').hidden=false; $('#cap').classList.add('on');
+    $('#cap-t').textContent=c.title;
+    $('#cap-m').innerHTML=`${c.ano?c.ano+' · ':''}${esc(c.artist)} · ${esc(c.lic)} · <a href="${c.page}" target="_blank" rel="noopener">Commons ↗</a>`;
+    atualizarHeart();
+  };
+  im.onerror=()=>{ if(S.depth<6) proxima(true); };
+  im.src=c.thumb;
+}
+const esc=s=>(s||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+
+/* ============ timer ============ */
+function programar(){
+  clearTimeout(S.tId);
+  if(S.auto&&S.timer>0&&document.visibilityState==='visible') S.tId=setTimeout(()=>proxima(), S.timer*1000);
+}
+function setAuto(v){
+  S.auto=v;
+  $('#ic-pause').style.display=v?'':'none';
+  $('#ic-play').style.display=v?'none':'';
+}
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) programar(); });
+
+/* ============ favoritos ============ */
+function salvarFavs(){ store.set('ia_favoritos',JSON.stringify(S.favs));
+  $('#favcnt').hidden=!S.favs.length; $('#favcnt').textContent=S.favs.length; }
+function toggleFav(){
+  const c=S.cur; if(!c) return;
+  const i=S.favs.findIndex(f=>f.id===c.id);
+  if(i>=0){ S.favs.splice(i,1); toast('Removido dos favoritos'); }
+  else{ S.favs.unshift({...c,quando:Date.now()}); toast('❤ Favoritado'); }
+  salvarFavs(); atualizarHeart();
+}
+function atualizarHeart(){ $('#c-heart').classList.toggle('on', !!(S.cur&&S.favs.some(f=>f.id===S.cur.id))); }
+function renderFavs(){
+  const g=$('#favgrid');
+  if(!S.favs.length){ g.innerHTML='<p class="hint">Nenhum favorito ainda — toque no ❤ numa imagem que te tocar.</p>'; return; }
+  g.innerHTML=S.favs.map(f=>`
+    <div class="fcard">
+      <a href="${f.page}" target="_blank" rel="noopener"><img src="${f.thumb}" alt="${esc(f.title)}" loading="lazy"></a>
+      <span class="ft" title="${esc(f.title)}">${esc(f.title)}</span>
+      <button class="fx" data-id="${f.id}" title="Remover">✕</button>
+    </div>`).join('');
+  g.querySelectorAll('.fx').forEach(b=>b.onclick=()=>{
+    S.favs=S.favs.filter(f=>String(f.id)!==b.dataset.id); salvarFavs(); renderFavs(); atualizarHeart();
+  });
+}
+
+/* ============ eventos ============ */
+$('#c-prev').onclick=()=>proxima();
+$('#c-play').onclick=()=>{ setAuto(!S.auto); programar(); toast(S.auto?'▶ passagem automática':'⏸ pausado'); };
+$('#c-heart').onclick=toggleFav;
+$('#c-full').onclick=()=>{ document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{}); };
+$('#c-link').onclick=()=>{ if(!S.cur) return;
+  (navigator.clipboard?navigator.clipboard.writeText(S.cur.page):Promise.reject())
+    .then(()=>toast('Link copiado ✓')).catch(()=>toast(S.cur.page)); };
+$('#btn-favs').onclick=()=>{ renderFavs(); $('#m-favs').hidden=false; };
+$('#favs-close').onclick=()=>{$('#m-favs').hidden=true;};
+$('#btn-config').onclick=()=>{$('#cfg-timer').value=String(S.timer);$('#m-config').hidden=false;};
+$('#cfg-close').onclick=()=>{$('#m-config').hidden=true;};
+$('#cfg-timer').onchange=e=>{ S.timer=+e.target.value; programar(); };
+$('#in-cancel').onclick=()=>{$('#m-in').hidden=true;};
+$('#in-go').onclick=()=>{
+  if(S.mode==='ano'){
+    const y=Math.max(1826,Math.min(2025,+$('#in-year').value||1942)); S.ano=y;
+    banner(null); $('#m-in').hidden=true; recomecar();
+  } else {
+    const t=$('#in-term').value.trim();
+    if(!t){ toast('Escreve um tema 🙂'); return; }
+    S.termo=t; banner(null); $('#m-in').hidden=true; recomecar();
+  }
+};
+$('#in-term').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#in-go').click(); });
+$('#in-year').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#in-go').click(); });
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return;
+  if(e.key==='ArrowRight'||e.key===' '){ e.preventDefault(); proxima(); }
+  else if(e.key==='f') $('#c-full').click();
+  else if(e.key==='p') $('#c-play').click();
+  else if(e.key==='l') toggleFav();
+});
+/* swipe no celular */
+let tx0=null;
+document.addEventListener('touchstart',e=>{ tx0=e.touches[0].clientX; },{passive:true});
+document.addEventListener('touchend',e=>{
+  if(tx0===null) return;
+  const dx=e.changedTouches[0].clientX-tx0; tx0=null;
+  if(Math.abs(dx)>60) proxima();
+},{passive:true});
+
+/* ============ boot ============ */
+renderChips(); salvarFavs();
+carregarLote().then(()=>{ if(S.queue.length){ proxima(); } else { $('#splash').classList.add('off'); } });
+</script>
+</body>
+</html>
