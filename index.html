@@ -295,10 +295,12 @@ const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},
 
 const CATS=[
   {cat:'Sorte',        modos:['aleatorio']},
-  {cat:'Atmosferas',   modos:['calmo','animado','melancolico','epico']},
+  {cat:'Atmosferas',   modos:['calmo','animado','melancolico','epico','tempestades']},
   {cat:'Tempo',        modos:['historico','anemoia','ano']},
-  {cat:'Natureza',     modos:['campos','vulcoes','neve','deserto','oceano','ceu']},
-  {cat:'Lugares',      modos:['vazios','abandonados','cidades']},
+  {cat:'Natureza',     modos:['campos','florestas','rios','vulcoes','neve','deserto','oceano','agricultura']},
+  {cat:'Céu e espaço', modos:['ceu','espaco']},
+  {cat:'Caminhos',     modos:['estradas','trens','pontes','farois']},
+  {cat:'Lugares',      modos:['cidades','vazios','abandonados','catedrais']},
   {cat:'Você',         modos:['parecidos','custom']},
 ];
 const MODES={
@@ -321,6 +323,16 @@ const MODES={
   cidades:     {ic:'🌃', nome:'Cidades à noite'},
   parecidos:   {ic:'❤️', nome:'Parecidos com favoritos'},
   custom:      {ic:'✏️', nome:'Meu tema'},
+  estradas:    {ic:'🛤️', nome:'Estradas e trilhos'},
+  trens:       {ic:'🚂', nome:'Trens antigos'},
+  pontes:      {ic:'🌉', nome:'Pontes'},
+  farois:      {ic:'🗼', nome:'Faróis e costa'},
+  florestas:   {ic:'🌲', nome:'Florestas'},
+  rios:        {ic:'🏞️', nome:'Rios e cachoeiras'},
+  agricultura: {ic:'🚜', nome:'Agricultura'},
+  tempestades: {ic:'⛈️', nome:'Tempestades'},
+  catedrais:   {ic:'⛪', nome:'Catedrais'},
+  espaco:      {ic:'🚀', nome:'Espaço'},
 };
 /* ~10 buscas LITERAIS por modo — se uma vier fraca, as outras sustentam */
 const POOLS={
@@ -339,13 +351,26 @@ const POOLS={
   vazios:['empty railway station','empty stadium seats','deserted city street','empty swimming pool','abandoned railway platform','empty shopping mall','empty classroom desks','deserted beach','empty theatre modern','empty airport terminal'],
   abandonados:['abandoned building urbex','ghost town street','abandoned factory interior','derelict mansion','abandoned hospital corridor','abandoned room decay','rusted abandoned car','abandoned church interior','overgrown abandoned house','abandoned mine entrance'],
   cidades:['city skyline night','street night neon','city aerial night','hong kong skyline','tokyo street night','rain city night','skyscrapers in fog','old town street europe','city bridge night','city dusk panorama'],
+  estradas:['winding mountain road','empty highway horizon','dirt road countryside','railway track landscape','railroad curve forest','highway aerial view','old railway bridge','country lane trees','road through forest','desert highway'],
+  trens:['steam locomotive','steam train station','vintage railway','steam train countryside','old train station platform','railway steam engine','heritage railway train','steam locomotive close up','train viaduct','vintage tram street'],
+  pontes:['suspension bridge','covered bridge','old stone bridge','bridge over river','iron bridge victorian','bridge in fog','arch bridge river','railway bridge landscape','footbridge forest','famous bridge city'],
+  farois:['lighthouse on cliff','lighthouse sunset coast','lighthouse rocky shore','old lighthouse tower','lighthouse aerial view','lighthouse at dawn','harbor pier boats','fishing boats harbor','coastal lighthouse day','lighthouse blue sky'],
+  florestas:['redwood forest','bamboo forest path','foggy pine forest','autumn forest path','tropical rainforest canopy','forest sunlight rays','birch forest','moss covered forest','dark forest fog','forest waterfall'],
+  rios:['waterfall long exposure','river through forest','mountain river rapids','small waterfall stream','waterfall jungle','river canyon','creek rocks forest','big waterfall aerial','river valley sunset','lazy river landscape'],
+  agricultura:['wheat harvest field','farm tractor field','vineyard rows','rice terraces','sunflower field','olive grove','harvest combine field','orchard blossoms','countryside farm barn','lavender field rows'],
+  tempestades:['supercell storm','lightning strike city','storm clouds field','tornado plain','rain storm sea','monsoon rain street','dramatic storm front','waterspout sea','storm over plains','hail storm sky'],
+  catedrais:['gothic cathedral interior','gothic cathedral facade','flying buttresses cathedral','stained glass window church','cathedral nave vaulted','gothic church exterior','cathedral rose window','medieval cathedral spire','monastery cloister','baroque church interior'],
+  espaco:['saturn planet','nebula hubble','rocket launch','space shuttle launch','apollo mission photograph','astronaut spacewalk','earth from space','mars surface rover','galaxy telescope image','observatory night sky'],
 };
 /* termo amplo de reserva, pra nunca encerrar um lote vazio */
 const FALLBACK={
   calmo:'calm landscape', animado:'festival', melancolico:'autumn rain', epico:'dramatic landscape',
   historico:'historic monument', anemoia:'abandoned interior', campos:'grassland landscape',
   vulcoes:'volcano', neve:'winter landscape', deserto:'desert', oceano:'stormy sea',
-  ceu:'night sky', vazios:'empty interior', abandonados:'abandoned building', cidades:'city night'
+  ceu:'night sky', vazios:'empty interior', abandonados:'abandoned building', cidades:'city night',
+  estradas:'country road', trens:'steam train', pontes:'bridge river', farois:'lighthouse coast',
+  florestas:'forest landscape', rios:'waterfall', agricultura:'farmland', tempestades:'storm clouds',
+  catedrais:'cathedral interior', espaco:'outer space'
 };
 const BLOQ=/(map|mapa|diagram|logo|chart|graph|flag|coat[- ]of[- ]arms|seal|signature|poster|cover|screenshot|stamp|selo|bra[sz]ão)/i;
 
