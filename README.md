@@ -11,7 +11,7 @@
 | 🎲 **Aleatório** | sorteio puro entre milhões de fotos do Commons |
 | 🧘 **Calmo** | lagos na neblina, horizontes, florestas silenciosas |
 | 🎉 **Animado** | carnavais, shows, fogos, feiras |
-| 🏛️ **Histórico** | fotografias antigas de ruas, pessoas e marcos |
+| 🏛️ **Histórico** | coisas históricas de verdade: guerras e batalhas registradas, ruínas antigas, castelos, pirâmides, monumentos, pinturas e retratos de época |
 | 🎞️ **Anemoia** | lugares vazios e significantes que dão a impressão de que já foram cheios um dia: salões de baile, teatros, casinos, saguões |
 | 📅 **Ano** | digite um ano (1826–2025) e viaje até ele |
 | 🌾 **Campos infinitos** | planícies, pradarias, horizontes sem fim |
