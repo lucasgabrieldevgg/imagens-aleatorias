@@ -357,6 +357,23 @@ const $=s=>document.querySelector(s);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const esc=s=>(s||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
+function copyText(txt){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(txt).then(()=>true).catch(()=>legacy());
+  }
+  return Promise.resolve(legacy());
+  function legacy(){
+    try{
+      const ta=document.createElement('textarea');
+      ta.value=txt; ta.style.cssText='position:fixed;opacity:0;left:-9999px';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      const ok=document.execCommand('copy');
+      ta.remove();
+      return ok;
+    }catch(e){ return false; }
+  }
+}
 function banner(m){const b=$('#banner');if(!m){b.classList.remove('on');return;}b.textContent=m;b.classList.add('on');setTimeout(()=>b.classList.remove('on'),5000);}
 
 /* ============ API Wikimedia ============ */
@@ -641,9 +658,11 @@ $('#c-next').onclick=()=>proxima();
 $('#c-play').onclick=()=>{ setAuto(!S.auto); toast(S.auto?'▶ passagem automática':'⏸ pausado'); };
 $('#c-heart').onclick=toggleFav;
 $('#c-full').onclick=()=>{ document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{}); };
-$('#c-link').onclick=()=>{ if(!S.cur) return;
-  (navigator.clipboard?navigator.clipboard.writeText(S.cur.page):Promise.reject())
-    .then(()=>toast('Link copiado ✓')).catch(()=>toast(S.cur.page)); };
+$('#c-link').onclick=async()=>{
+  if(!S.cur){ toast('Nenhuma imagem carregada ainda'); return; }
+  const ok=await copyText(S.cur.page);
+  toast(ok?'🔗 Link da página copiado ✓':'Não deu para copiar — o link é: '+S.cur.page);
+};
 $('#chip-modo').onclick=()=>{ renderMenu(); $('#m-modos').hidden=false; };
 $('#modos-close').onclick=()=>{$('#m-modos').hidden=true;};
 $('#btn-favs').onclick=()=>{ renderFavs(); $('#m-favs').hidden=false; };
