@@ -25,8 +25,9 @@
   #bg,#pic{position:fixed;inset:0;width:100vw;height:100vh}
   #bg{object-fit:cover;filter:blur(46px) brightness(.38) saturate(1.15);transform:scale(1.12);
     transition:opacity .6s ease}
-  #pic{object-fit:contain;padding:0;opacity:0;transition:opacity .55s ease;z-index:1}
+  #pic{object-fit:contain;opacity:0;transition:opacity .55s ease;z-index:1}
   #pic.on{opacity:1}
+  #pic.dim{opacity:.14}
 
   /* ─── topbar ─── */
   header{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:10px;
@@ -36,33 +37,44 @@
     display:flex;align-items:center;gap:7px}
   .brand small{color:var(--muted);font-weight:500}
   @media (max-width:640px){ .brand small{display:none} }
-  .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;padding:2px;
-    -webkit-mask-image:linear-gradient(90deg,transparent,#000 12px,#000 calc(100% - 12px),transparent);
-    mask-image:linear-gradient(90deg,transparent,#000 12px,#000 calc(100% - 12px),transparent)}
-  .chips::-webkit-scrollbar{display:none}
-  .chip{flex-shrink:0;border:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(10px);
-    backdrop-filter:blur(10px);border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600;
-    color:var(--muted);transition:.15s;white-space:nowrap}
-  .chip:hover{color:var(--ink);border-color:rgba(255,255,255,.22)}
-  .chip.active{background:var(--brand);border-color:var(--brand);color:#fff;
-    box-shadow:0 3px 14px rgba(124,140,255,.45)}
+  #chip-modo{border:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(10px);
+    backdrop-filter:blur(10px);border-radius:999px;padding:8px 15px;font-size:13.5px;font-weight:700;
+    display:flex;align-items:center;gap:8px;transition:.15s;max-width:52vw}
+  #chip-modo:hover{border-color:rgba(255,255,255,.25)}
+  #chip-modo .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #chip-modo .caret{color:var(--muted);font-size:11px}
+  .hbtns{margin-left:auto;display:flex;gap:7px}
   .hbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--glass);
     -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
     display:inline-flex;align-items:center;justify-content:center;transition:.15s;position:relative}
   .hbtn:hover{border-color:rgba(255,255,255,.25);transform:translateY(-1px)}
   .cnt{position:absolute;top:-6px;right:-6px;background:var(--heart);color:#fff;font-size:10px;font-weight:800;
     min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 4px}
-  @media (max-width:640px){ header{flex-wrap:wrap} .chips{order:3;flex-basis:100%} }
+
+  /* ─── loading pill ─── */
+  #loading{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:15;
+    background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    border:1px solid var(--line);border-radius:14px;padding:14px 20px;box-shadow:var(--shadow);
+    display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--muted)}
+  #loading[hidden]{display:none}
+  .spin{width:22px;height:22px;border-radius:99px;border:3px solid rgba(255,255,255,.12);
+    border-top-color:var(--brand);animation:rot 1s linear infinite;flex-shrink:0}
+  @keyframes rot{to{transform:rotate(360deg)}}
+
+  /* ─── barra de progresso ─── */
+  #prog{position:fixed;left:0;right:0;bottom:0;height:4px;z-index:14;background:rgba(255,255,255,.07)}
+  #prog-fill{height:100%;width:0%;background:linear-gradient(90deg,#5b7cfa,#7c5cfc);
+    box-shadow:0 0 10px rgba(124,140,255,.6)}
 
   /* ─── ribbon anemoia ─── */
-  #ribbon{position:fixed;left:50%;transform:translateX(-50%);bottom:172px;z-index:10;
+  #ribbon{position:fixed;left:50%;transform:translateX(-50%);bottom:148px;z-index:10;
     background:rgba(124,92,252,.16);border:1px solid rgba(124,92,252,.4);color:#c9c0ff;
     font-size:12px;font-weight:600;border-radius:999px;padding:6px 14px;display:none;
-    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-align:center;max-width:92vw}
   #ribbon.on{display:block;animation:up .3s ease}
 
   /* ─── legenda ─── */
-  #cap{position:fixed;left:50%;transform:translateX(-50%);bottom:86px;z-index:10;width:min(680px,calc(100vw - 20px));
+  #cap{position:fixed;left:50%;transform:translateX(-50%);bottom:88px;z-index:10;width:min(680px,calc(100vw - 20px));
     background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
     border:1px solid var(--line);border-radius:14px;padding:12px 16px;box-shadow:var(--shadow);
     opacity:0;transition:opacity .5s ease}
@@ -83,16 +95,7 @@
   .cbt.heart.on{color:var(--heart)}
   .cbt.heart.on svg{fill:var(--heart)}
   .cbt svg{pointer-events:none}
-  @media (max-width:420px){ .cbt{width:42px;height:42px;border-radius:12px} #cap{bottom:78px} }
-
-  /* ─── loading pill ─── */
-  #loading{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:15;
-    background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
-    border:1px solid var(--line);border-radius:14px;padding:14px 20px;box-shadow:var(--shadow);
-    display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--muted)}
-  #loading[hidden]{display:none}
-  #pic.dim{opacity:.14}
-  #pic{transition:opacity .35s ease}
+  @media (max-width:420px){ .cbt{width:42px;height:42px;border-radius:12px} #cap{bottom:78px} #ribbon{bottom:136px} }
 
   /* ─── splash ─── */
   #splash{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;flex-direction:column;
@@ -101,18 +104,14 @@
   #splash .logo{font-size:34px}
   #splash .t{font-weight:800;font-size:19px;letter-spacing:-.02em}
   #splash .s{color:var(--muted);font-size:13.5px}
-  .spin{width:34px;height:34px;border-radius:99px;border:3px solid rgba(255,255,255,.12);
-    border-top-color:var(--brand);animation:rot 1s linear infinite}
-  @keyframes rot{to{transform:rotate(360deg)}}
-  @keyframes up{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translate(-50%,0)}}
 
   /* ─── modais ─── */
   .modal{position:fixed;inset:0;background:rgba(2,4,10,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
     display:flex;align-items:center;justify-content:center;padding:16px;z-index:50;animation:fade .15s ease}
   .modal[hidden]{display:none}
   @keyframes fade{from{opacity:0}to{opacity:1}}
-  .sheet{background:#11151f;border:1px solid var(--line);border-radius:18px;max-width:560px;width:100%;
-    max-height:85vh;overflow:auto;padding:20px;box-shadow:var(--shadow);animation:pop .18s ease}
+  .sheet{background:#11151f;border:1px solid var(--line);border-radius:18px;max-width:600px;width:100%;
+    max-height:86vh;overflow:auto;padding:20px;box-shadow:var(--shadow);animation:pop .18s ease}
   @keyframes pop{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
   .sheet h2{margin:0 0 4px;font-size:17px}
   .sheet .hint{margin:0 0 14px;color:var(--muted);font-size:13px}
@@ -124,6 +123,17 @@
     font-size:14px;border:1px solid var(--line);background:#171c28;transition:.15s}
   .btn:hover{border-color:rgba(255,255,255,.25)}
   .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+
+  /* menu de modos */
+  .msec{margin-bottom:6px}
+  .msec-t{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    margin:14px 0 8px}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+  .mitem{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:#0d1119;
+    border-radius:12px;padding:11px 12px;font-size:13.5px;font-weight:600;text-align:left;transition:.15s}
+  .mitem:hover{border-color:rgba(255,255,255,.25);transform:translateY(-1px)}
+  .mitem.active{background:rgba(124,140,255,.15);border-color:var(--brand);color:#cdd4ff}
+  .mitem .mi{font-size:17px}
 
   /* favoritos */
   #favgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
@@ -153,15 +163,17 @@
 <img id="pic" alt="imagem aleatória do Wikimedia Commons" referrerpolicy="no-referrer">
 
 <header>
-  <div class="brand">🖼 <span>Imagens Aleatórias</span> <small>· via Wikimedia Commons</small></div>
-  <div class="chips" id="chips"></div>
-  <button id="btn-favs" class="hbtn" title="Meus favoritos" aria-label="Favoritos">
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    <span id="favcnt" class="cnt" hidden>0</span>
-  </button>
-  <button id="btn-config" class="hbtn" title="Configurações" aria-label="Configurações">
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-  </button>
+  <div class="brand">🖼 <span>Imagens Aleatórias</span> <small>· Wikimedia Commons</small></div>
+  <button id="chip-modo" title="Escolher modo">🎲 <span class="n">Aleatório</span> <span class="caret">▼</span></button>
+  <div class="hbtns">
+    <button id="btn-favs" class="hbtn" title="Meus favoritos" aria-label="Favoritos">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span id="favcnt" class="cnt" hidden>0</span>
+    </button>
+    <button id="btn-config" class="hbtn" title="Configurações" aria-label="Configurações">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
 </header>
 
 <div id="banner"></div>
@@ -174,8 +186,10 @@
 </div>
 
 <div id="ctrl">
-  <button id="c-prev" class="cbt" title="Guardar essa pra depois? proxima [→]" aria-label="Próxima">⏭</button>
-  <button id="c-play" class="cbt" title="Pausar/retomar passagem automática [P]" aria-label="Pausar">
+  <button id="c-next" class="cbt" title="Próxima [→]" aria-label="Próxima">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5.59 7.41 10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"/></svg>
+  </button>
+  <button id="c-play" class="cbt" title="Pausar/retomar [P]" aria-label="Pausar">
     <svg id="ic-pause" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1.2"/><rect x="14" y="4" width="4" height="16" rx="1.2"/></svg>
     <svg id="ic-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M8 5.14v13.72c0 .8.87 1.3 1.56.88l11-6.86a1.04 1.04 0 0 0 0-1.76l-11-6.86A1.04 1.04 0 0 0 8 5.14z"/></svg>
   </button>
@@ -190,6 +204,8 @@
   </button>
 </div>
 
+<div id="prog"><div id="prog-fill"></div></div>
+
 <div id="splash">
   <div class="logo">🖼️</div>
   <div class="t">Imagens Aleatórias</div>
@@ -197,7 +213,17 @@
   <div class="spin"></div>
 </div>
 
-<!-- modal: entrada (ano / tema) -->
+<!-- ══ MENU DE MODOS ══ -->
+<div id="m-modos" class="modal" hidden>
+  <div class="sheet">
+    <h2>🎛️ Modos</h2>
+    <p class="hint">Cada modo busca exatamente o que promete. Escolha por clima, tempo, natureza, lugar… ou o seu tema.</p>
+    <div id="menu-lista"></div>
+    <div class="row"><button id="modos-close" class="btn primary">Fechar</button></div>
+  </div>
+</div>
+
+<!-- ══ entrada (ano / tema) ══ -->
 <div id="m-in" class="modal" hidden>
   <div class="sheet">
     <h2 id="in-t">Modo</h2>
@@ -208,7 +234,7 @@
     </div>
     <div id="in-tx" hidden>
       <label>Tema, lugar, época ou atmosfera</label>
-      <input type="text" id="in-term" placeholder="ex.: paris 1900, vulcões, faróis na neblina…">
+      <input type="text" id="in-term" placeholder="ex.: paris 1900, faróis na neblina, tulipas…">
     </div>
     <div class="row">
       <button id="in-cancel" class="btn">Cancelar</button>
@@ -217,31 +243,32 @@
   </div>
 </div>
 
-<!-- modal: favoritos -->
+<!-- ══ favoritos ══ -->
 <div id="m-favs" class="modal" hidden>
   <div class="sheet">
     <h2>❤️ Meus favoritos</h2>
-    <p class="hint">Salvos neste navegador. Clique na imagem para abrir a página original no Commons.</p>
+    <p class="hint">Salvos neste navegador. O modo <b>“Parecidos”</b> usa as categorias destas imagens no Commons para achar parecidas.</p>
     <div id="favgrid"></div>
     <div class="row"><button id="favs-close" class="btn">Fechar</button></div>
   </div>
 </div>
 
-<!-- modal: configurações -->
+<!-- ══ configurações ══ -->
 <div id="m-config" class="modal" hidden>
   <div class="sheet">
     <h2>⚙️ Configurações</h2>
-    <p class="hint">Imagens: <b>Wikimedia Commons</b> (milhões de fotos livres). Cada imagem exibe autor e licença — respeitando os termos de uso.</p>
+    <p class="hint">Imagens: <b>Wikimedia Commons</b> (milhões de fotos livres). Autor e licença exibidos em cada imagem.</p>
     <label>Passagem automática</label>
     <select id="cfg-timer">
+      <option value="5">a cada 5 segundos</option>
       <option value="10">a cada 10 segundos</option>
       <option value="15" selected>a cada 15 segundos</option>
       <option value="30">a cada 30 segundos</option>
       <option value="60">a cada 1 minuto</option>
       <option value="0">desligada (só manual)</option>
     </select>
-    <label>Atalhos do teclado</label>
-    <div class="hint" style="margin:0">→ / espaço = próxima · P = pausar · F = tela cheia · L = favoritar</div>
+    <label>Atalhos</label>
+    <div class="hint" style="margin:0">→ / espaço = próxima · P = pausar · F = tela cheia · L = favoritar · M = menu de modos</div>
     <div class="row"><button id="cfg-close" class="btn primary">Fechar</button></div>
   </div>
 </div>
@@ -251,51 +278,81 @@
 <script>
 "use strict";
 /* ═══════════════════════════════════════════════════════════════
-   IMAGENS ALEATÓRIAS — fonte: Wikimedia Commons (grátis, sem chave).
-   Motor: lotes agregando VÁRIAS buscas (nunca desiste na primeira
-   query fraca), gerações de carga (trocar de modo descarta o load
-   antigo na hora) e fallback para aleatórias se um tema vier vazio.
+   IMAGENS ALEATÓRIAS — Wikimedia Commons (grátis, sem chave).
+   - Cada modo tem ~10 buscas LITERAIS ao tema, agregadas.
+   - Pré-carga: quando faltam ≤6 imagens na fila, busca mais em
+     segundo plano (a passagem nunca trava).
+   - Geração de carga: trocar de modo descarta loads velhos.
+   - ❤️ "Parecidos": usa as CATEGORIAS das favoritas no Commons.
+   - Barra de progresso: tempo até a próxima foto (é o próprio timer).
    ═══════════════════════════════════════════════════════════════ */
 const WIKI='https://commons.wikimedia.org/w/api.php';
+const LOTE_MIN=14;      /* tenta juntar pelo menos isso por carga */
+const PRE_FETCH=6;      /* faltando ≤6 na fila, já busca mais */
 const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},
              set(k,v){try{localStorage.setItem(k,v);}catch(e){}},
              getJ(k){try{return JSON.parse(this.get(k)||'[]');}catch(e){return [];}}};
 
-const MODES=[
-  {id:'aleatorio',  ic:'🎲', nome:'Aleatório'},
-  {id:'calmo',      ic:'🧘', nome:'Calmo'},
-  {id:'animado',    ic:'🎉', nome:'Animado'},
-  {id:'historico',  ic:'🏛️', nome:'Histórico'},
-  {id:'anemoia',    ic:'🎞️', nome:'Anemoia'},
-  {id:'ano',        ic:'📅', nome:'Ano…'},
-  {id:'campos',     ic:'🌾', nome:'Campos infinitos'},
-  {id:'vazios',     ic:'🚉', nome:'Ecos de movimento'},
-  {id:'abandonados',ic:'🏚️', nome:'Abandonados'},
-  {id:'custom',     ic:'✏️', nome:'Meu tema'},
+const CATS=[
+  {cat:'Sorte',        modos:['aleatorio']},
+  {cat:'Atmosferas',   modos:['calmo','animado','melancolico','epico']},
+  {cat:'Tempo',        modos:['historico','anemoia','ano']},
+  {cat:'Natureza',     modos:['campos','vulcoes','neve','deserto','oceano','ceu']},
+  {cat:'Lugares',      modos:['vazios','abandonados','cidades']},
+  {cat:'Você',         modos:['parecidos','custom']},
 ];
-const POOLS={
-  calmo:['misty lake','calm sea horizon','foggy forest morning','peaceful landscape','tranquil mountain lake','sunrise field mist','quiet river'],
-  animado:['carnival crowd','fireworks night sky','street festival people','concert stage lights','parade celebration','night market street'],
-  historico:['World War II photograph','battle war photograph','medieval castle','ancient ruins temple','historic monument statue','historical painting museum','royal portrait painting','ancient rome ruins','civil war army photograph','egyptian pyramid photograph'],
-  campos:['grassland horizon','prairie landscape','vast open field','open plain sky','steppe landscape','savanna horizon','field sunset'],
-  vazios:['empty railway station','abandoned theatre interior','empty stadium seats','deserted street','empty swimming pool','abandoned railway platform','empty hall architecture'],
-  abandonados:['abandoned building urbex','ghost town street','abandoned factory interior','derelict mansion','abandoned hospital corridor','abandoned room decay','ruins interior'],
+const MODES={
+  aleatorio:   {ic:'🎲', nome:'Aleatório'},
+  calmo:       {ic:'🧘', nome:'Calmo'},
+  animado:     {ic:'🎉', nome:'Animado'},
+  melancolico: {ic:'🌧️', nome:'Melancólico'},
+  epico:       {ic:'⚡', nome:'Épico'},
+  historico:   {ic:'🏛️', nome:'Histórico'},
+  anemoia:     {ic:'🎞️', nome:'Anemoia'},
+  ano:         {ic:'📅', nome:'Ano…'},
+  campos:      {ic:'🌾', nome:'Campos infinitos'},
+  vulcoes:     {ic:'🌋', nome:'Vulcões'},
+  neve:        {ic:'❄️', nome:'Neve e gelo'},
+  deserto:     {ic:'🏜️', nome:'Deserto'},
+  oceano:      {ic:'🌊', nome:'Oceano e tempestades'},
+  ceu:         {ic:'🌌', nome:'Céu noturno'},
+  vazios:      {ic:'🚉', nome:'Ecos de movimento'},
+  abandonados: {ic:'🏚️', nome:'Abandonados'},
+  cidades:     {ic:'🌃', nome:'Cidades à noite'},
+  parecidos:   {ic:'❤️', nome:'Parecidos com favoritos'},
+  custom:      {ic:'✏️', nome:'Meu tema'},
 };
-/* termo mais amplo por modo, para nunca encerrar um lote com zero */
-POOLS.anemoia=['abandoned ballroom','empty ornate theatre','abandoned dance hall','grand empty hall interior','abandoned hotel lobby','empty old cafe interior','abandoned palace interior','abandoned cinema auditorium','faded grandeur interior','empty grand station concourse','vacant hall chandelier','abandoned casino interior'];
+/* ~10 buscas LITERAIS por modo — se uma vier fraca, as outras sustentam */
+const POOLS={
+  calmo:['misty lake','calm sea horizon','foggy forest morning','tranquil mountain lake','sunrise over field','quiet river','still water reflection','soft sunset clouds','peaceful meadow','gentle waves beach'],
+  animado:['carnival crowd','fireworks night','concert stage lights','parade celebration','street festival people','night market crowd','confetti celebration','carnival dancers','festival balloons','amusement park ride'],
+  melancolico:['rain window drops','empty bench autumn','autumn leaves street','foggy cemetery','rain umbrella city','overcast sea horizon','falling leaves','grey stormy sea','misty moor','empty playground fog'],
+  epico:['mountain summit snow','thunderstorm clouds lightning','canyon landscape sunset','powerful waterfall','glacier ice landscape','volcano eruption','aurora over mountains','mountain range panorama','lightning storm night','cliff ocean waves'],
+  historico:['World War II photograph','battle war photograph','medieval castle','ancient ruins temple','historic monument statue','historical painting museum','royal portrait painting','ancient rome ruins','civil war army photograph','egyptian pyramid photograph'],
+  anemoia:['abandoned ballroom','empty ornate theatre','abandoned dance hall','grand empty hall interior','abandoned hotel lobby','empty old cafe interior','abandoned palace interior','abandoned cinema auditorium','faded grandeur interior','abandoned casino interior','vacant hall chandelier'],
+  campos:['grassland horizon','prairie landscape','vast open field','wheat field sunset','steppe landscape','savanna horizon','endless meadow','rolling hills farmland','flower field','open plain sky'],
+  vulcoes:['volcano eruption','lava flow','volcanic crater','lava lake','volcano eruption night','volcanic landscape','fumarole steam','basalt columns','caldera view','volcanic ash plume'],
+  neve:['winter forest snow','frozen lake ice','snowy village','icicles frozen','glacier blue ice','snowfall city street','frozen waterfall','snow mountain landscape','ice cave','frost morning'],
+  deserto:['sand dunes','desert oasis palm','sahara desert','desert canyon rock','camel caravan desert','cactus desert landscape','salt flat','dunes sunset','arid desert landscape','wadi rock desert'],
+  oceano:['storm waves lighthouse','large ocean waves','ocean cliff sunset','sailing ship rough sea','waves crashing rocks','rocky coast storm','open sea waves','lighthouse big waves','sea waves aerial','dramatic seascape'],
+  ceu:['milky way night sky','starry sky mountains','aurora borealis','star trails night','meteor shower','full moon landscape','night sky long exposure','galaxy milky way','dramatic sunset clouds','night sky landscape'],
+  vazios:['empty railway station','empty stadium seats','deserted city street','empty swimming pool','abandoned railway platform','empty shopping mall','empty classroom desks','deserted beach','empty theatre modern','empty airport terminal'],
+  abandonados:['abandoned building urbex','ghost town street','abandoned factory interior','derelict mansion','abandoned hospital corridor','abandoned room decay','rusted abandoned car','abandoned church interior','overgrown abandoned house','abandoned mine entrance'],
+  cidades:['city skyline night','street night neon','city aerial night','hong kong skyline','tokyo street night','rain city night','skyscrapers in fog','old town street europe','city bridge night','city dusk panorama'],
+};
+/* termo amplo de reserva, pra nunca encerrar um lote vazio */
 const FALLBACK={
-  calmo:'calm landscape', animado:'festival', historico:'historic monument',
-  campos:'grassland landscape', vazios:'empty interior', abandonados:'abandoned building',
-  anemoia:'abandoned interior', custom:'photograph'
+  calmo:'calm landscape', animado:'festival', melancolico:'autumn rain', epico:'dramatic landscape',
+  historico:'historic monument', anemoia:'abandoned interior', campos:'grassland landscape',
+  vulcoes:'volcano', neve:'winter landscape', deserto:'desert', oceano:'stormy sea',
+  ceu:'night sky', vazios:'empty interior', abandonados:'abandoned building', cidades:'city night'
 };
 const BLOQ=/(map|mapa|diagram|logo|chart|graph|flag|coat[- ]of[- ]arms|seal|signature|poster|cover|screenshot|stamp|selo|bra[sz]ão)/i;
 
 /* ============ estado ============ */
 const S={ mode:'aleatorio', termo:'', ano:1942, queue:[], qi:0, cur:null,
-          auto:true, timer:15, tId:null, carregando:false, favs:store.getJ('ia_favoritos'),
-          seen:new Set() };
-let gen=0;            /* geração de carga: trocar de modo invalida loads antigos */
-let loadPromise=null; /* single-flight: nunca dois lotes em paralelo */
+          auto:true, timer:15, favs:store.getJ('ia_favoritos'), seen:new Set() };
+let gen=0, loadPromise=null;
 const $=s=>document.querySelector(s);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const esc=s=>(s||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
@@ -362,13 +419,41 @@ async function loteAleatorio(n=2){
   return cand;
 }
 
-/* ============ motor de lotes (agregado, sem beco sem saída) ============ */
+/* ============ ❤️ relacionadas às favoritas (categorias do Commons) ============ */
+async function relacionadas(){
+  if(!S.favs.length) return null;
+  const favs=embaralha([...S.favs]).slice(0,3);
+  const titles=favs.map(f=>'File:'+f.title.replace(/\.(jpe?g|png)$/i,'')).join('|');
+  try{
+    const d=await wm({action:'query',titles,prop:'categories',clshow:'!hidden',cllimit:'25'});
+    let cats=[];
+    for(const p of (d.query&&d.query.pages)||[])
+      for(const c of (p.categories||[])) cats.push(c.title);
+    cats=cats.filter(c=>!/licen[cs]e|cc-|pd |gfdl|self-?published|uploaded|needing|wikipedia|files |images with|category:/i.test(c.replace(/^Category:/i,'')) );
+    if(cats.length){
+      const cat=escolhe(cats);
+      const d2=await wm({action:'query',generator:'categorymembers',gcmtitle:cat,gcmtype:'file',
+        gcmlimit:'30',prop:'imageinfo',iiprop:'url|size|mime|extmetadata',iiurlwidth:'1600'});
+      const r=filtrar(d2);
+      if(r.length>=4) return r;
+    }
+  }catch(e){}
+  /* fallback: busca com palavras do título de uma favorita */
+  const f=escolhe([...S.favs]);
+  const words=f.title.split(/[\s,\-–—()_]+/).filter(w=>w.length>3).slice(0,3).join(' ');
+  return busca(words);
+}
+
+/* ============ motor de lotes ============ */
 async function novoLote(){
   let cand=[];
   switch(S.mode){
-    case 'aleatorio':
-      cand=await loteAleatorio(2);
-      break;
+    case 'aleatorio': cand=await loteAleatorio(2); break;
+    case 'parecidos':{
+      const r=await relacionadas();
+      if(!r) return null;                     /* sem favoritos → tratado fora */
+      cand=r; break;
+    }
     case 'ano':
       cand=merge(await busca(`${S.ano} photograph`),
                  await busca(`incategory:"${S.ano} photographs"`));
@@ -378,25 +463,23 @@ async function novoLote(){
       if(cand.length<6) cand=merge(cand,await busca(S.termo+' photograph'));
       break;
     default:{
-      /* percorre o pool inteiro (embaralhado), agregando, até juntar um lote bom */
       const pool=embaralha([...(POOLS[S.mode]||['photograph'])]);
       for(const q of pool){
         cand=merge(cand,await busca(q));
-        if(cand.length>=14) break;
+        if(cand.length>=LOTE_MIN) break;
       }
       if(cand.length<6&&FALLBACK[S.mode])
         cand=merge(cand,await busca(FALLBACK[S.mode]));
     }
   }
   cand=cand.filter(c=>!S.seen.has(c.id));
-  if(S.seen.size>500) S.seen.clear();
+  if(S.seen.size>600) S.seen.clear();
   cand.forEach(c=>S.seen.add(c.id));
   return embaralha(cand);
 }
 
-/* ============ carga com geração + single-flight ============ */
+/* ============ carga: single-flight + geração + appendo na fila ============ */
 function setCarregando(v){
-  S.carregando=v;
   $('#loading').hidden=!v;
   $('#pic').classList.toggle('dim',v);
   if(v){ $('#cap').classList.remove('on'); $('#cap').hidden=true; }
@@ -405,18 +488,20 @@ function pedirLote(){
   if(loadPromise) return loadPromise;
   const myGen=gen;
   loadPromise=(async()=>{
-    let q=[];
+    let q=null;
     try{ q=await novoLote(); }
     catch(e){ if(myGen===gen) banner('⚠️ '+e.message); }
-    if(myGen!==gen) return;                    /* modo mudou no meio: descarta */
-    if(!q.length&&S.mode!=='aleatorio'){
-      /* beco sem saída real: cai pra aleatórias em vez de tela morta */
+    if(myGen!==gen) return;                     /* modo mudou no meio: descarta */
+    if(q===null){                               /* 'parecidos' sem favoritos */
+      banner('❤️ Favorite algumas imagens primeiro — mostrando aleatórias enquanto isso');
+      try{ q=await loteAleatorio(2); }catch(e){}
+    } else if(!q.length&&S.mode!=='aleatorio'){
       banner(S.mode==='custom'
         ? `Não achei nada para "${S.termo}" — mostrando aleatórias; ajusta o tema ✏️`
-        : 'Pouco material nesse modo agora — mostrando aleatórias');
+        : 'Pouco material agora nesse modo — misturando com aleatórias');
       try{ q=await loteAleatorio(2); }catch(e){}
     }
-    S.queue=q; S.qi=0;
+    if(myGen===gen&&q&&q.length) S.queue.push(...q);
   })().finally(()=>{
     loadPromise=null;
     if(myGen===gen){ setCarregando(false); $('#splash').classList.add('off'); }
@@ -427,28 +512,37 @@ async function recomecar(){
   gen++; S.queue=[]; S.qi=0; banner(null);
   setCarregando(true);
   await pedirLote();
-  if(!S.queue.length||S.carregando) return;
-  mostrar(S.queue[S.qi++]); programar();
+  proxima();
 }
 async function proxima(){
-  if(S.carregando) return;
-  if(S.qi>=S.queue.length){
+  if(!S.queue.length||S.qi>=S.queue.length){
     setCarregando(true);
     await pedirLote();
-    if(!S.queue.length||S.carregando) return;
+    if(!S.queue.length||S.qi>=S.queue.length){ setCarregando(false); return; }
   }
-  mostrar(S.queue[S.qi++]); programar();
+  mostrar(S.queue[S.qi++]);
+  /* pré-carga: faltando pouco, já busca mais em segundo plano */
+  if(S.queue.length-S.qi<=PRE_FETCH&&!loadPromise) pedirLote();
 }
 
 /* ============ exibição ============ */
-function renderChips(){
-  $('#chips').innerHTML=MODES.map(m=>
-    `<button class="chip${m.id===S.mode?' active':''}" data-m="${m.id}">${m.ic} ${m.nome}</button>`).join('');
-  document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>selecionar(b.dataset.m));
+function renderMenu(){
+  $('#menu-lista').innerHTML=CATS.map(g=>`
+    <div class="msec"><div class="msec-t">${g.cat}</div>
+    <div class="mgrid">${g.modos.map(id=>{
+      const m=MODES[id];
+      return `<button class="mitem${id===S.mode?' active':''}" data-m="${id}">
+        <span class="mi">${m.ic}</span><span>${m.nome}</span></button>`;
+    }).join('')}</div></div>`).join('');
+  document.querySelectorAll('.mitem').forEach(b=>b.onclick=()=>{ $('#m-modos').hidden=true; selecionar(b.dataset.m); });
+}
+function renderChip(){
+  const m=MODES[S.mode];
+  $('#chip-modo').innerHTML=`${m.ic} <span class="n">${m.nome}</span> <span class="caret">▼</span>`;
 }
 function selecionar(m){
-  if(S.mode===m&&S.queue.length) return;
-  S.mode=m; renderChips();
+  if(S.mode===m&&S.queue.length){ return; }
+  S.mode=m; renderMenu(); renderChip();
   $('#ribbon').classList.toggle('on', m==='anemoia');
   if(m==='ano'){ pedirAno(); return; }
   if(m==='custom'){ pedirTema(); return; }
@@ -475,22 +569,47 @@ function mostrar(c){
     $('#cap-t').textContent=c.title;
     $('#cap-m').innerHTML=`${c.ano?c.ano+' · ':''}${esc(c.artist)} · ${esc(c.lic)} · <a href="${c.page}" target="_blank" rel="noopener">Commons ↗</a>`;
     atualizarHeart();
+    dispararProgresso();
   };
-  im.onerror=()=>{ if(!S.carregando) proxima(); };
+  im.onerror=()=>proxima();
   im.src=c.thumb;
 }
 
-/* ============ timer ============ */
-function programar(){
-  clearTimeout(S.tId);
-  if(S.auto&&S.timer>0&&document.visibilityState==='visible') S.tId=setTimeout(()=>proxima(), S.timer*1000);
+/* ============ progresso = timer ============ */
+let pRAF=null, pStart=0, pTotal=0, pCongelado=null;
+function setProg(f){ $('#prog-fill').style.width=(Math.min(1,Math.max(0,f))*100).toFixed(2)+'%'; }
+function cancelaProg(){ if(pRAF){cancelAnimationFrame(pRAF);pRAF=null;} }
+function dispararProgresso(){
+  cancelaProg(); pCongelado=null;
+  if(!S.auto||!S.timer){ setProg(0); return; }
+  pTotal=S.timer*1000; pStart=performance.now();
+  tickProg();
+}
+function tickProg(){
+  const el=performance.now()-pStart;
+  const f=el/pTotal;
+  if(f>=1){ setProg(1); pRAF=null; proxima(); return; }
+  setProg(f);
+  pRAF=requestAnimationFrame(tickProg);
+}
+function congelarProg(){
+  if(pRAF){ cancelAnimationFrame(pRAF); pRAF=null; pCongelado=performance.now()-pStart; }
+}
+function retomarProg(){
+  if(pCongelado===null||!S.auto||!S.timer){ return; }
+  pStart=performance.now()-pCongelado; pCongelado=null;
+  tickProg();
 }
 function setAuto(v){
   S.auto=v;
   $('#ic-pause').style.display=v?'':'none';
   $('#ic-play').style.display=v?'none':'';
+  if(v){ retomarProg(); } else { congelarProg(); }
 }
-document.addEventListener('visibilitychange',()=>{ if(!document.hidden) programar(); });
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){ congelarProg(); }
+  else { retomarProg(); }
+});
 
 /* ============ favoritos ============ */
 function salvarFavs(){ store.set('ia_favoritos',JSON.stringify(S.favs));
@@ -505,7 +624,7 @@ function toggleFav(){
 function atualizarHeart(){ $('#c-heart').classList.toggle('on', !!(S.cur&&S.favs.some(f=>f.id===S.cur.id))); }
 function renderFavs(){
   const g=$('#favgrid');
-  if(!S.favs.length){ g.innerHTML='<p class="hint">Nenhum favorito ainda — toque no ❤ numa imagem que te tocar.</p>'; return; }
+  if(!S.favs.length){ g.innerHTML='<p class="hint">Nenhum favorito ainda — toque no ❤ numa imagem que te tocar. Depois experimente o modo ❤️ Parecidos.</p>'; return; }
   g.innerHTML=S.favs.map(f=>`
     <div class="fcard">
       <a href="${f.page}" target="_blank" rel="noopener"><img src="${f.thumb}" alt="${esc(f.title)}" loading="lazy"></a>
@@ -518,22 +637,24 @@ function renderFavs(){
 }
 
 /* ============ eventos ============ */
-$('#c-prev').onclick=()=>proxima();
-$('#c-play').onclick=()=>{ setAuto(!S.auto); programar(); toast(S.auto?'▶ passagem automática':'⏸ pausado'); };
+$('#c-next').onclick=()=>proxima();
+$('#c-play').onclick=()=>{ setAuto(!S.auto); toast(S.auto?'▶ passagem automática':'⏸ pausado'); };
 $('#c-heart').onclick=toggleFav;
 $('#c-full').onclick=()=>{ document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{}); };
 $('#c-link').onclick=()=>{ if(!S.cur) return;
   (navigator.clipboard?navigator.clipboard.writeText(S.cur.page):Promise.reject())
     .then(()=>toast('Link copiado ✓')).catch(()=>toast(S.cur.page)); };
+$('#chip-modo').onclick=()=>{ renderMenu(); $('#m-modos').hidden=false; };
+$('#modos-close').onclick=()=>{$('#m-modos').hidden=true;};
 $('#btn-favs').onclick=()=>{ renderFavs(); $('#m-favs').hidden=false; };
 $('#favs-close').onclick=()=>{$('#m-favs').hidden=true;};
 $('#btn-config').onclick=()=>{$('#cfg-timer').value=String(S.timer);$('#m-config').hidden=false;};
 $('#cfg-close').onclick=()=>{$('#m-config').hidden=true;};
-$('#cfg-timer').onchange=e=>{ S.timer=+e.target.value; programar(); };
+$('#cfg-timer').onchange=e=>{ S.timer=+e.target.value; dispararProgresso(); };
 $('#in-cancel').onclick=()=>{$('#m-in').hidden=true;};
 $('#in-go').onclick=()=>{
   if(S.mode==='ano'){
-    const y=Math.max(1826,Math.min(2025,+$('#in-year').value||1942)); S.ano=y;
+    S.ano=Math.max(1826,Math.min(2025,+$('#in-year').value||1942));
     $('#m-in').hidden=true; recomecar();
   } else {
     const t=$('#in-term').value.trim();
@@ -549,6 +670,7 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='f') $('#c-full').click();
   else if(e.key==='p') $('#c-play').click();
   else if(e.key==='l') toggleFav();
+  else if(e.key==='m'){ renderMenu(); $('#m-modos').hidden=false; }
 });
 let tx0=null;
 document.addEventListener('touchstart',e=>{ tx0=e.touches[0].clientX; },{passive:true});
@@ -559,9 +681,8 @@ document.addEventListener('touchend',e=>{
 },{passive:true});
 
 /* ============ boot ============ */
-renderChips(); salvarFavs();
+renderMenu(); renderChip(); salvarFavs();
 recomecar();
-
 </script>
 </body>
 </html>
