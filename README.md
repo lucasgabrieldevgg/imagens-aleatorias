@@ -12,7 +12,7 @@
 | 🧘 **Calmo** | lagos na neblina, horizontes, florestas silenciosas |
 | 🎉 **Animado** | carnavais, shows, fogos, feiras |
 | 🏛️ **Histórico** | fotografias antigas de ruas, pessoas e marcos |
-| 🎞️ **Anemoia** | nostalgia de um tempo que você não viveu — décadas de 1890 a 1970 |
+| 🎞️ **Anemoia** | lugares vazios e significantes que dão a impressão de que já foram cheios um dia: salões de baile, teatros, casinos, saguões |
 | 📅 **Ano** | digite um ano (1826–2025) e viaje até ele |
 | 🌾 **Campos infinitos** | planícies, pradarias, horizontes sem fim |
 | 🚉 **Ecos de movimento** | lugares que já foram cheios e hoje estão vazios: estações, teatros, piscinas |
