@@ -287,7 +287,7 @@
    - Barra de progresso: tempo até a próxima foto (é o próprio timer).
    ═══════════════════════════════════════════════════════════════ */
 const WIKI='https://commons.wikimedia.org/w/api.php';
-const LOTE_MIN=14;      /* tenta juntar pelo menos isso por carga */
+const LOTE_MIN=24;      /* tenta juntar pelo menos isso por carga */
 const PRE_FETCH=6;      /* faltando ≤6 na fila, já busca mais */
 const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},
              set(k,v){try{localStorage.setItem(k,v);}catch(e){}},
@@ -376,7 +376,17 @@ const BLOQ=/(map|mapa|diagram|logo|chart|graph|flag|coat[- ]of[- ]arms|seal|sign
 
 /* ============ estado ============ */
 const S={ mode:'aleatorio', termo:'', ano:1942, queue:[], qi:0, cur:null,
-          auto:true, timer:15, favs:store.getJ('ia_favoritos'), seen:new Set() };
+          auto:true, timer:15, favs:store.getJ('ia_favoritos'),
+          seen:new Set(store.getJ('ia_seen')||[]),
+          seenBase:new Set(store.getJ('ia_seenbase')||[]) };   /* bases de séries ("(1).jpg") também */
+function persisteSeen(){
+  try{
+    let l=[...S.seen]; if(l.length>2500) l=l.slice(-1500);
+    let b=[...S.seenBase]; if(b.length>1500) b=b.slice(-900);
+    S.seen=new Set(l); S.seenBase=new Set(b);
+    store.set('ia_seen',JSON.stringify(l)); store.set('ia_seenbase',JSON.stringify(b));
+  }catch(e){}
+}
 let gen=0, loadPromise=null;
 const $=s=>document.querySelector(s);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -425,9 +435,13 @@ function filtrar(d){
     if(ii.mime!=='image/jpeg'&&ii.mime!=='image/png') continue;
     if((ii.width||0)<700||!ii.thumburl) continue;
     if(BLOQ.test(p.title)) continue;
+    if(/(nazi|hitler|swastika|su[aá]stica|third[ -]?reich|sturmabteilung|wehrmacht|bundesarchiv|gestapo|nsdap|holocaust|stormtrooper)/i.test(p.title)) continue;   /* 🛡️ nunca como vibe */
     const md=ii.extmetadata||{};
     const ano=(limparHTML(md.DateTimeOriginal&&md.DateTimeOriginal.value).match(/\d{4}/)||[])[0]||'';
-    out.push({ id:p.pageid, thumb:ii.thumburl, page:ii.descriptionurl,
+    const base=(p.title.replace(/^File:/,'').replace(/\.(jpe?g|png)$/i,'').toLowerCase().replace(/\s*\(\d+\)\s*$/,'').replace(/[\s_.-]+\d{1,3}$/,'').trim());
+      if(S.seenBase.has(base)) continue;
+      out.push({ id:p.pageid, thumb:ii.thumburl, page:ii.descriptionurl,
+      base,
       title:p.title.replace(/^File:/,'').replace(/\.(jpe?g|png)$/i,''),
       artist:limparHTML(md.Artist&&md.Artist.value).slice(0,60)||'autor desconhecido',
       lic:(md.LicenseShortName&&limparHTML(md.LicenseShortName.value))||'Commons',
@@ -454,7 +468,7 @@ function embaralha(a){
 async function loteAleatorio(n=2){
   let cand=[];
   for(let i=0;i<n;i++){
-    const d=await wm({action:'query',generator:'random',grnnamespace:'6',grnlimit:'20',
+    const d=await wm({action:'query',generator:'random',grnnamespace:'6',grnlimit:'40',
       prop:'imageinfo',iiprop:'url|size|mime|extmetadata',iiurlwidth:'1600'});
     cand=merge(cand,filtrar(d));
   }
@@ -500,23 +514,25 @@ async function novoLote(){
       cand=merge(await busca(`${S.ano} photograph`),
                  await busca(`incategory:"${S.ano} photographs"`));
       break;
-    case 'custom':
-      cand=await busca(S.termo);
-      if(cand.length<6) cand=merge(cand,await busca(S.termo+' photograph'));
-      break;
+    case 'custom':{
+      const termoLimpo=S.termo.replace(/[=,;:|\\/]+/g,' ').replace(/\s+/g,' ').trim();
+      cand=await busca(termoLimpo);
+      if(cand.length<6) cand=merge(cand,await busca(termoLimpo+' photograph'));
+      if(cand.length<6) cand=merge(cand,await busca(termoLimpo+' landscape'));
+      break;}
     default:{
       const pool=embaralha([...(POOLS[S.mode]||['photograph'])]);
       for(const q of pool){
         cand=merge(cand,await busca(q));
-        if(cand.length>=LOTE_MIN) break;
+        if(cand.length>=LOTE_MIN) break;   /* LOTE_MIN agora é 24 — varre mais queries */
       }
       if(cand.length<6&&FALLBACK[S.mode])
         cand=merge(cand,await busca(FALLBACK[S.mode]));
     }
   }
   cand=cand.filter(c=>!S.seen.has(c.id));
-  if(S.seen.size>600) S.seen.clear();
-  cand.forEach(c=>S.seen.add(c.id));
+  cand.forEach(c=>{ S.seen.add(c.id); if(c.base) S.seenBase.add(c.base); });
+  persisteSeen();   /* sobrevive ao F5; evicção tira os mais antigos, não zera */
   return embaralha(cand);
 }
 
