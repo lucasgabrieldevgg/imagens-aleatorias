@@ -1,0 +1,8 @@
+{
+  "name": "imagens-aleatorias",
+  "private": true,
+  "version": "1.1.0",
+  "description": "🖼️ Imagens aleatórias do Wikimedia Commons com modos de atmosfera",
+  "scripts": { "test": "node tests/imagens_test.cjs" },
+  "dependencies": { "jsdom": "^29.1.1" }
+}

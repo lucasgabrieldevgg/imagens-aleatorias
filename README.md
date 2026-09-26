@@ -1,6 +1,9 @@
 # 🖼️ Imagens Aleatórias
 
-**https://lucasgabrieldevgg.github.io/imagens-aleatorias**
+[![testes](https://github.com/lucasgabrieldevgg/imagens-aleatorias/actions/workflows/ci.yml/badge.svg)](https://github.com/lucasgabrieldevgg/imagens-aleatorias/actions/workflows/ci.yml)
+
+**## 🌐 Teste agora
+**https://lucasgabrieldevgg.github.io/imagens-aleatorias** — grátis, sem conta. Favoritos ficam no teu navegador.**
 
 > Uma janela aleatória para o mundo: imagens do **Wikimedia Commons** trocando sozinhas, com modos de atmosfera — calmo, animado, histórico, **anemoia**, campos infinitos, lugares que já foram movimentados e hoje estão vazios, abandonados… ou o seu próprio tema.
 
@@ -41,3 +44,13 @@ Cada modo tem **10+ buscas literais** ao tema, agregadas — se uma vier fraca, 
 - Arquivo único (`index.html`), sem build, sem chave de API — usa a API pública do **Wikimedia Commons** (CORS liberado via `origin=*`);
 - Fonte de imagens: `commons.wikimedia.org` (conteúdo livre; cada arquivo mantém sua licença);
 - Hospedado no GitHub Pages, custo R$ 0.
+
+## Licença
+MIT — vê o arquivo [LICENSE](LICENSE).
+
+## Desenvolvimento
+```bash
+npm ci
+npm test   # suíte com 14 checks (jsdom)
+```
+Testes rodam no push via GitHub Actions.
