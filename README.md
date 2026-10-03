@@ -1,56 +1,59 @@
-# 🖼️ Imagens Aleatórias
+[🇧🇷 Português](README.pt-BR.md)
 
-[![testes](https://github.com/lucasgabrieldevgg/imagens-aleatorias/actions/workflows/ci.yml/badge.svg)](https://github.com/lucasgabrieldevgg/imagens-aleatorias/actions/workflows/ci.yml)
+# 🖼️ Random Images
 
-**## 🌐 Teste agora
-**https://lucasgabrieldevgg.github.io/imagens-aleatorias** — grátis, sem conta. Favoritos ficam no teu navegador.**
+[![tests](https://github.com/lucasgabrieldevgg/imagens-aleatorias/actions/workflows/ci.yml/badge.svg)](https://github.com/lucasgabrieldevgg/imagens-aleatorias/actions/workflows/ci.yml)
 
-> Uma janela aleatória para o mundo: imagens do **Wikimedia Commons** trocando sozinhas, com modos de atmosfera — calmo, animado, histórico, **anemoia**, campos infinitos, lugares que já foram movimentados e hoje estão vazios, abandonados… ou o seu próprio tema.
+## 🌐 Try it now
+**https://lucasgabrieldevgg.github.io/imagens-aleatorias** — free, no account. Favorites stay in your browser.
 
-## 🎛️ Modos (29, no menu organizado por categoria)
+> A random window into the world: **Wikimedia Commons** images changing on their own, with atmosphere modes — calm, lively, historical, **anemoia**, endless fields, places that used to be busy and today are empty, abandoned… or your own theme.
 
-**🎲 Sorte** — Aleatório (sorteio puro entre milhões)
+## 🎛️ Modes (29, in a category-organized menu)
 
-**🌫️ Atmosferas** — 🧘 Calmo · 🎉 Animado · 🌧️ Melancólico · ⚡ Épico · ⛈️ Tempestades
+**🎲 Luck** — Random (pure draw among millions)
 
-**⏳ Tempo** — 🏛️ Histórico (guerras, ruínas, castelos, pirâmides, pinturas) · 🎞️ Anemoia (lugares vazios que parecem ter sido cheios um dia) · 📅 Ano (1826–2025)
+**🌫️ Atmospheres** — 🧘 Calm · 🎉 Lively · 🌧️ Melancholic · ⚡ Epic · ⛈️ Storms
 
-**🌍 Natureza** — 🌾 Campos infinitos · 🌲 Florestas · 🏞️ Rios e cachoeiras · 🌋 Vulcões · ❄️ Neve e gelo · 🏜️ Deserto · 🌊 Oceano e tempestades · 🚜 Agricultura
+**⏳ Time** — 🏛️ Historical (wars, ruins, castles, pyramids, paintings) · 🎞️ Anemoia (empty places that seem like they were once full) · 📅 Year (1826–2025)
 
-**🌌 Céu e espaço** — 🌌 Céu noturno · 🚀 Espaço (Saturno, nebulosas, foguetes, Apollo, Marte)
+**🌍 Nature** — 🌾 Endless fields · 🌲 Forests · 🏞️ Rivers and waterfalls · 🌋 Volcanoes · ❄️ Snow and ice · 🏜️ Desert · 🌊 Ocean and storms · 🚜 Farming
 
-**🛤️ Caminhos** — 🛤️ Estradas e trilhos · 🚂 Trens antigos · 🌉 Pontes · 🗼 Faróis e costa
+**🌌 Sky and space** — 🌌 Night sky · 🚀 Space (Saturn, nebulae, rockets, Apollo, Mars)
 
-**🏙️ Lugares** — 🌃 Cidades à noite · 🚉 Ecos de movimento · 🏚️ Abandonados · ⛪ Catedrais
+**🛤️ Paths** — 🛤️ Roads and rails · 🚂 Old trains · 🌉 Bridges · 🗼 Lighthouses and coast
 
-**❤️ Você** — ❤️ Parecidos (usa as categorias das suas favoritas no Commons) · ✏️ Meu tema
+**🏙️ Places** — 🌃 Cities at night · 🚉 Motion echoes · 🏚️ Abandoned · ⛪ Cathedrals
 
-Cada modo tem **10+ buscas literais** ao tema, agregadas — se uma vier fraca, as outras sustentam.
+**❤️ Yours** — ❤️ Similar (uses the categories of your Commons favorites) · ✏️ My theme
 
-## ✨ Detalhes
+Every mode runs **10+ literal searches** on the theme, aggregated — if one comes back weak, the others carry it.
 
-- **Passagem automática** configurável (5s a 1min) — pausa quando a aba fica oculta;
-- **⏳ Barra de progresso**: quanto tempo falta para a próxima foto (é o próprio timer — pausa junto);
-- **♻️ Pré-carga inteligente**: quando faltam ≤6 imagens na fila, busca mais em segundo plano — a passagem nunca trava;
-- **🎛️ Menu de modos** organizado por categoria (`M` abre);
-- **Fundo ambiente**: a própria imagem desfocada atrás, estilo modo cinema;
-- **❤️ Favoritos** salvos no navegador, com galeria;
-- **Créditos sempre visíveis**: autor, ano e licença de cada imagem, com link para a página original (requisito das licenças do Commons);
-- **Atalhos**: `→`/espaço próxima · `P` pausa · `F` tela cheia · `L` favoritar · swipe no celular;
-- Carrega **miniaturas de 1600px** (nunca os originais gigantes) e filtra mapas/diagramas;
+## ✨ Details
 
-## 🔧 Técnico
+- **Auto-advance** configurable (5s to 1min) — pauses when the tab is hidden;
+- **⏳ Progress bar**: time until the next photo (it *is* the timer — pauses along);
+- **♻️ Smart preloading**: when ≤6 images are left in the queue, more are fetched in the background — playback never stalls;
+- **🎛️ Mode menu** organized by category (`M` opens it);
+- **Ambient backdrop**: the image itself, blurred, behind everything — cinema mode;
+- **❤️ Favorites** saved in the browser, with a gallery;
+- **Credits always visible**: author, year and license of every image, linking to the original page (Commons license requirement);
+- **Shortcuts**: `→`/space next · `P` pause · `F` fullscreen · `L` favorite · swipe on mobile;
+- Loads **1600px thumbnails** (never the giant originals) and filters maps/diagrams;
 
-- Arquivo único (`index.html`), sem build, sem chave de API — usa a API pública do **Wikimedia Commons** (CORS liberado via `origin=*`);
-- Fonte de imagens: `commons.wikimedia.org` (conteúdo livre; cada arquivo mantém sua licença);
-- Hospedado no GitHub Pages, custo R$ 0.
+## 🔧 Technical
 
-## Licença
-MIT — vê o arquivo [LICENSE](LICENSE).
+- Single file (`index.html`), no build, no API key — uses the public **Wikimedia Commons** API (CORS via `origin=*`);
+- Image source: `commons.wikimedia.org` (free content; each file keeps its own license);
+- Hosted on GitHub Pages, $0 cost.
 
-## Desenvolvimento
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+## Development
 ```bash
 npm ci
-npm test   # suíte com 14 checks (jsdom)
+npm test   # 14-check suite (jsdom)
 ```
-Testes rodam no push via GitHub Actions.
+Tests run on push via GitHub Actions.
